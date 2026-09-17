@@ -1,15 +1,16 @@
 import sqlite3
+import os
 from datetime import datetime
 from config import DB_PATH
 
 
 def get_connection():
+    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     return sqlite3.connect(DB_PATH)
 
 
 def init_database():
     conn = get_connection()
-
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -29,7 +30,6 @@ def init_database():
 
 def save_prediction(username, image_name, prediction, confidence):
     conn = get_connection()
-
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -50,7 +50,6 @@ def save_prediction(username, image_name, prediction, confidence):
 
 def get_predictions(username):
     conn = get_connection()
-
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -61,7 +60,6 @@ def get_predictions(username):
     """, (username,))
 
     records = cursor.fetchall()
-
     conn.close()
 
     return records
